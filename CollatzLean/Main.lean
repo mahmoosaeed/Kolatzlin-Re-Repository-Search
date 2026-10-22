@@ -447,7 +447,7 @@ theorem acceleratedPathIdentity
                   (2 ^ (∑ j ∈ Finset.range i, exps j))) +
               (3 ^ (r - r)) *
                 (2 ^ (∑ j ∈ Finset.range r, exps j)) := by
-              rw [hlast]
+              rw [← hlast]
         _ = 3 ^ (r + 1) * n +
               ∑ i ∈ Finset.range (r + 1),
                 (3 ^ (r - i)) *
