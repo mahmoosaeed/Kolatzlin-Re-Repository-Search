@@ -389,58 +389,63 @@ theorem acceleratedPathIdentity
   | zero =>
       simp [hstart]
   | succ r ih =>
+      let E := ∑ i ∈ Finset.range r, exps i
+      let S := ∑ i ∈ Finset.range r,
+        (3 ^ (r - 1 - i)) * (2 ^ (∑ j ∈ Finset.range i, exps j))
       have hr := hstep r (by omega)
       have ih' := ih (fun i hi => hstep i (by omega))
+      have hsum :
+          3 * S =
+            ∑ i ∈ Finset.range r,
+              (3 ^ (r - i)) * (2 ^ (∑ j ∈ Finset.range i, exps j)) := by
+        dsimp [S]
+        rw [Finset.mul_sum]
+        apply Finset.sum_congr rfl
+        intro i hi
+        have hri : i < r := Finset.mem_range.mp hi
+        have hexp : r - i = (r - 1 - i) + 1 := by omega
+        rw [hexp, Nat.pow_succ]
+        ring
+      have hlast :
+          (3 ^ ((r + 1) - 1 - r)) *
+            (2 ^ (∑ j ∈ Finset.range r, exps j)) = 2 ^ E := by
+        simp [E]
       simp only [Finset.sum_range_succ] at ih' ⊢
-      rw [show (r + 1) - 1 = r by omega]
-      rw [Nat.pow_add]
+      dsimp [E, S] at ih' ⊢
+      simp only [Nat.succ_sub_one] at ih' ⊢
+      rw [Nat.pow_succ]
       calc
         (2 ^ (∑ i ∈ Finset.range r, exps i) * 2 ^ exps r) * xs (r + 1)
             = 2 ^ (∑ i ∈ Finset.range r, exps i) *
                 (2 ^ exps r * xs (r + 1)) := by ring
-        _ = 2 ^ (∑ i ∈ Finset.range r, exps i) *
-                (3 * xs r + 1) := by rw [hr]
+        _ = 2 ^ (∑ i ∈ Finset.range r, exps i) * (3 * xs r + 1) := by
+              rw [hr]
         _ = 3 * (2 ^ (∑ i ∈ Finset.range r, exps i) * xs r) +
-                2 ^ (∑ i ∈ Finset.range r, exps i) := by ring
+              2 ^ (∑ i ∈ Finset.range r, exps i) := by ring
         _ = 3 * ((3 ^ r) * n +
-                ∑ i ∈ Finset.range r,
-                  (3 ^ (r - 1 - i)) *
-                    (2 ^ (∑ j ∈ Finset.range i, exps j))) +
-                2 ^ (∑ i ∈ Finset.range r, exps i) := by rw [ih']
+              ∑ i ∈ Finset.range r,
+                (3 ^ (r - 1 - i)) *
+                  (2 ^ (∑ j ∈ Finset.range i, exps j))) +
+              2 ^ (∑ i ∈ Finset.range r, exps i) := by rw [ih']
         _ = 3 ^ (r + 1) * n +
-                (∑ i ∈ Finset.range r,
-                  (3 ^ (r - i)) *
-                    (2 ^ (∑ j ∈ Finset.range i, exps j))) +
-                2 ^ (∑ i ∈ Finset.range r, exps i) := by
-              rw [Nat.pow_succ]
-              rw [Finset.mul_sum]
-              congr 1
-              · ring
-              · apply Finset.sum_congr rfl
-                intro i hi
-                have hri : i < r := Finset.mem_range.mp hi
-                have hexp : r - i = (r - 1 - i) + 1 := by omega
-                rw [hexp, Nat.pow_succ]
-                ring
-        _ = 3 ^ (r + 1) * n +
-                (∑ i ∈ Finset.range r,
-                  (3 ^ ((r + 1) - 1 - i)) *
-                    (2 ^ (∑ j ∈ Finset.range i, exps j))) +
-                (3 ^ ((r + 1) - 1 - r)) *
-                  (2 ^ (∑ j ∈ Finset.range r, exps j)) := by
-              congr 2
-              · apply Finset.sum_congr rfl
-                intro i hi
-                congr 2
-                omega
-              · simp
-        _ = 3 ^ (r + 1) * n +
-                ∑ i ∈ Finset.range (r + 1),
-                  (3 ^ ((r + 1) - 1 - i)) *
-                    (2 ^ (∑ j ∈ Finset.range i, exps j)) := by
-              rw [Finset.sum_range_succ]
+              (∑ i ∈ Finset.range r,
+                (3 ^ (r - i)) *
+                  (2 ^ (∑ j ∈ Finset.range i, exps j))) +
+              2 ^ (∑ i ∈ Finset.range r, exps i) := by
+              rw [Nat.pow_succ, hsum]
               ring
-
+        _ = 3 ^ (r + 1) * n +
+              (∑ i ∈ Finset.range r,
+                (3 ^ (r - i)) *
+                  (2 ^ (∑ j ∈ Finset.range i, exps j))) +
+              (3 ^ ((r + 1) - 1 - r)) *
+                (2 ^ (∑ j ∈ Finset.range r, exps j)) := by
+              rw [hlast]
+        _ = 3 ^ (r + 1) * n +
+              ∑ i ∈ Finset.range (r + 1),
+                (3 ^ ((r + 1) - 1 - i)) *
+                  (2 ^ (∑ j ∈ Finset.range i, exps j)) := by
+              simp only [Finset.sum_range_succ, Nat.succ_sub_one]
 
 /--
 A quantitative sufficient condition for descent along an accelerated path:
