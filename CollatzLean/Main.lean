@@ -301,4 +301,39 @@ def AcceleratedPathIdentityTarget
 /-- Open target: prove global strict descent for all n > 1. -/
 def GlobalDescentTarget : Prop := DescentPrinciple
 
+
+/--
+If an odd input is 1 modulo 4, its accelerated odd-step output is
+strictly smaller. The factorization exponent must be at least two.
+-/
+theorem acceleratedOddStep_lt_of_mod_four_eq_one {n : Nat}
+    (hn : 1 < n) (hmod : n % 4 = 1) :
+    acceleratedOddStep n < n := by
+  have hnodd : n % 2 = 1 := by omega
+  obtain ⟨a, heq, huodd⟩ :=
+    acceleratedOddStep_correct n (by omega)
+  have ha : 2 ≤ a := by
+    by_contra h
+    have hsmall : a = 0 ∨ a = 1 := by omega
+    rcases hsmall with ha0 | ha1
+    · subst a
+      simp only [pow_zero, one_mul] at heq
+      have hEven : (3 * n + 1) % 2 = 0 := by omega
+      rw [heq] at hEven
+      omega
+    · subst a
+      simp only [pow_one] at heq
+      have hmod4 : (3 * n + 1) % 4 = 0 := by omega
+      rw [heq] at hmod4
+      omega
+  have hpow : 4 ≤ 2 ^ a := by
+    have hp := Nat.pow_le_pow_right (by omega : 1 ≤ 2) ha
+    norm_num at hp ⊢
+    exact hp
+  have hmul : 4 * acceleratedOddStep n ≤
+      2 ^ a * acceleratedOddStep n :=
+    Nat.mul_le_mul_right _ hpow
+  rw [← heq] at hmul
+  nlinarith
+
 end CollatzLean
