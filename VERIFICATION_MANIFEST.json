@@ -1,0 +1,25 @@
+{
+  "archive": "CollatzLeanResearch.zip",
+  "verification_status": "REMOTE_GITHUB_ACTIONS_WORKFLOW_COMMITTED; CI_RESULT_PENDING; COMPILER_DIAGNOSTICS_NOT_OBTAINED; AXIOM_AUDIT_NOT_RUN; COLLatz_CONJECTURE_OPEN",
+  "project_toolchain": "leanprover/lean4:v4.19.0",
+  "mathlib_pin": "v4.19.0",
+  "runtime_checks": {
+    "lean_available_in_original_runtime": false,
+    "lake_available_in_original_runtime": false,
+    "matching_lake_build": "NOT RUN LOCALLY",
+    "kernel_axiom_audit": "PENDING REMOTE CI",
+    "compiler_diagnostics": "PENDING REMOTE CI",
+    "collatz_conjecture": "OPEN / NOT PROVED"
+  },
+  "finite_checks": {
+    "step_positive_inputs_1_to_10000": 10000,
+    "collatz_orbits_hit_one_inputs_1_to_10000": 10000,
+    "mod_six_residue_cases_u_0_to_10000": 3333,
+    "power_two_mod_three_exponents_0_to_10000": 10001
+  },
+  "finite_check_interpretation": "Bounded computational checks only; they do not prove any Lean theorem or the Collatz conjecture.",
+  "workflow": ".github/workflows/lean-verification.yml",
+  "workflow_commands": ["lake update", "lake exe cache get", "lake build", "lake env lean AxiomAudit.lean", "lake env lean CollatzLean/Tests.lean"],
+  "artifact": "lean-verification-logs",
+  "status_note": "Manifest written before first remote CI result; update after inspecting the actual workflow run."
+}
