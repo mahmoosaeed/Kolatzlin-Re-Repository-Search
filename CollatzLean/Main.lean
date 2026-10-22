@@ -428,12 +428,18 @@ theorem acceleratedPathIdentity
                   (2 ^ (∑ j ∈ Finset.range i, exps j))) +
               2 ^ (∑ i ∈ Finset.range r, exps i) := by rw [ih']
         _ = 3 ^ (r + 1) * n +
+              3 * (∑ i ∈ Finset.range r,
+                (3 ^ (r - 1 - i)) *
+                  (2 ^ (∑ j ∈ Finset.range i, exps j))) +
+              2 ^ (∑ i ∈ Finset.range r, exps i) := by
+              rw [Nat.pow_succ]
+              ring
+        _ = 3 ^ (r + 1) * n +
               (∑ i ∈ Finset.range r,
                 (3 ^ (r - i)) *
                   (2 ^ (∑ j ∈ Finset.range i, exps j))) +
               2 ^ (∑ i ∈ Finset.range r, exps i) := by
-              rw [Nat.pow_succ, hsum]
-              ring
+              rw [hsum]
         _ = 3 ^ (r + 1) * n +
               (∑ i ∈ Finset.range r,
                 (3 ^ (r - i)) *
