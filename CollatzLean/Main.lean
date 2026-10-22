@@ -370,4 +370,75 @@ theorem acceleratedOddStep_gt_of_mod_four_eq_three {n : Nat}
     simpa [ha] using heq
   omega
 
+
+/--
+The exact accelerated-path identity. The hypotheses encode each odd-to-odd
+block as 2^(exps i) * xs (i+1) = 3 * xs i + 1.
+-/
+theorem acceleratedPathIdentity
+    (n : Nat) (xs exps : Nat → Nat) (r : Nat)
+    (hstart : xs 0 = n)
+    (hstep : ∀ i, i < r →
+      2 ^ (exps i) * xs (i + 1) = 3 * xs i + 1) :
+    (2 ^ (∑ i ∈ Finset.range r, exps i)) * xs r =
+      (3 ^ r) * n +
+        ∑ i ∈ Finset.range r,
+          (3 ^ (r - 1 - i)) *
+            (2 ^ (∑ j ∈ Finset.range i, exps j)) := by
+  induction r with
+  | zero =>
+      simp [hstart]
+  | succ r ih =>
+      have hr := hstep r (by omega)
+      have ih' := ih (fun i hi => hstep i (by omega))
+      simp only [Finset.sum_range_succ] at ih' ⊢
+      rw [show (r + 1) - 1 = r by omega]
+      rw [Nat.pow_add]
+      calc
+        (2 ^ (∑ i ∈ Finset.range r, exps i) * 2 ^ exps r) * xs (r + 1)
+            = 2 ^ (∑ i ∈ Finset.range r, exps i) *
+                (2 ^ exps r * xs (r + 1)) := by ring
+        _ = 2 ^ (∑ i ∈ Finset.range r, exps i) *
+                (3 * xs r + 1) := by rw [hr]
+        _ = 3 * (2 ^ (∑ i ∈ Finset.range r, exps i) * xs r) +
+                2 ^ (∑ i ∈ Finset.range r, exps i) := by ring
+        _ = 3 * ((3 ^ r) * n +
+                ∑ i ∈ Finset.range r,
+                  (3 ^ (r - 1 - i)) *
+                    (2 ^ (∑ j ∈ Finset.range i, exps j))) +
+                2 ^ (∑ i ∈ Finset.range r, exps i) := by rw [ih']
+        _ = 3 ^ (r + 1) * n +
+                (∑ i ∈ Finset.range r,
+                  (3 ^ (r - i)) *
+                    (2 ^ (∑ j ∈ Finset.range i, exps j))) +
+                2 ^ (∑ i ∈ Finset.range r, exps i) := by
+              rw [Nat.pow_succ]
+              rw [Finset.mul_sum]
+              congr 1
+              · ring
+              · apply Finset.sum_congr rfl
+                intro i hi
+                have hri : i < r := Finset.mem_range.mp hi
+                have hexp : r - i = (r - 1 - i) + 1 := by omega
+                rw [hexp, Nat.pow_succ]
+                ring
+        _ = 3 ^ (r + 1) * n +
+                (∑ i ∈ Finset.range r,
+                  (3 ^ ((r + 1) - 1 - i)) *
+                    (2 ^ (∑ j ∈ Finset.range i, exps j))) +
+                (3 ^ ((r + 1) - 1 - r)) *
+                  (2 ^ (∑ j ∈ Finset.range r, exps j)) := by
+              congr 2
+              · apply Finset.sum_congr rfl
+                intro i hi
+                congr 2
+                omega
+              · simp
+        _ = 3 ^ (r + 1) * n +
+                ∑ i ∈ Finset.range (r + 1),
+                  (3 ^ ((r + 1) - 1 - i)) *
+                    (2 ^ (∑ j ∈ Finset.range i, exps j)) := by
+              rw [Finset.sum_range_succ]
+              ring
+
 end CollatzLean
