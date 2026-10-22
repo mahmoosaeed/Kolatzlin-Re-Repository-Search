@@ -336,4 +336,38 @@ theorem acceleratedOddStep_lt_of_mod_four_eq_one {n : Nat}
   rw [← heq] at hmul
   nlinarith
 
+
+/--
+For odd inputs congruent to 3 modulo 4, the accelerated exponent is
+exactly one, so the first accelerated output is larger than the input.
+This records the obstruction to universal one-block descent.
+-/
+theorem acceleratedOddStep_gt_of_mod_four_eq_three {n : Nat}
+    (hn : 1 < n) (hmod : n % 4 = 3) :
+    n < acceleratedOddStep n := by
+  obtain ⟨a, heq, huodd⟩ :=
+    acceleratedOddStep_correct n (by omega)
+  have hleft : (3 * n + 1) % 4 = 2 := by omega
+  have ha : a = 1 := by
+    by_cases ha0 : a = 0
+    · subst a
+      simp only [pow_zero, one_mul] at heq
+      have hmod2 : (3 * n + 1) % 2 = 0 := by omega
+      rw [heq] at hmod2
+      omega
+    · by_cases ha1 : a = 1
+      · exact ha1
+      · have ha2 : 2 ≤ a := by omega
+        have hp : 2 ^ a % 4 = 0 := by
+          rw [show a = 2 + (a - 2) by omega, pow_add]
+          simp [Nat.mul_mod]
+        have hprod : (2 ^ a * acceleratedOddStep n) % 4 = 0 := by
+          rw [Nat.mul_mod, hp]
+          simp
+        rw [← heq] at hprod
+        omega
+  have heq' : 3 * n + 1 = 2 * acceleratedOddStep n := by
+    simpa [ha] using heq
+  omega
+
 end CollatzLean
