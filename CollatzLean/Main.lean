@@ -29,6 +29,51 @@ stripTwosFuel is chosen as a conservative fuel bound.
 def acceleratedOddStep (n : Nat) : Nat :=
   stripTwosFuel (3 * n + 1) (3 * n + 1)
 
+
+/--
+Correctness of bounded factor-of-two stripping. If the positive input is
+at most the fuel, the result is odd and the input factors as a power of
+two times that result.
+-/
+theorem stripTwosFuel_correct (fuel n : Nat) (hn : 0 < n)
+    (hbound : n ≤ fuel) :
+    ∃ a, n = 2 ^ a * stripTwosFuel fuel n ∧
+      stripTwosFuel fuel n % 2 = 1 := by
+  induction fuel generalizing n with
+  | zero => omega
+  | succ fuel ih =>
+      by_cases heven : n % 2 = 0
+      · have hn2 : 0 < n / 2 := by omega
+        have hbound2 : n / 2 ≤ fuel := by omega
+        obtain ⟨a, ha, hodd⟩ := ih (n / 2) hn2 hbound2
+        refine ⟨a + 1, ?_, ?_⟩
+        · have hdiv : n = 2 * (n / 2) := by omega
+          calc
+            n = 2 * (n / 2) := hdiv
+            _ = 2 * (2 ^ a * stripTwosFuel fuel (n / 2)) := by rw [ha]
+            _ = 2 ^ (a + 1) * stripTwosFuel fuel (n / 2) := by
+              rw [pow_succ]
+              ring
+        · simpa [stripTwosFuel, heven] using hodd
+      · have hodd : n % 2 = 1 := by omega
+        refine ⟨0, ?_, ?_⟩
+        · simpa [stripTwosFuel, heven] using (show n = 2 ^ 0 * n by simp)
+        · simpa [stripTwosFuel, heven] using hodd
+
+/-- The accelerated odd step returns an odd factor of 3*n+1. -/
+theorem acceleratedOddStep_correct (n : Nat) (hn : 0 < n) :
+    ∃ a, 3 * n + 1 = 2 ^ a * acceleratedOddStep n ∧
+      acceleratedOddStep n % 2 = 1 := by
+  unfold acceleratedOddStep
+  exact stripTwosFuel_correct (3 * n + 1) (3 * n + 1)
+    (by omega) (le_rfl)
+
+/-- The accelerated odd-step output is positive on positive inputs. -/
+theorem acceleratedOddStep_pos {n : Nat} (hn : 0 < n) :
+    0 < acceleratedOddStep n := by
+  obtain ⟨a, _, hodd⟩ := acceleratedOddStep_correct n hn
+  omega
+
 /-- Some finite ordinary iterate equals one. -/
 def ReachesOne (n : Nat) : Prop := ∃ k, orbit n k = 1
 
