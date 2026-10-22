@@ -15,21 +15,19 @@ jobs:
     steps:
       - name: Check out project
         uses: actions/checkout@v4
-      - name: Set up Lean toolchain manager
-        uses: leanprover/lean-action@v1
-        with:
-          auto-config: false
-          build: false
-          test: false
-          use-mathlib-cache: false
-          use-github-cache: true
+
       - name: Prepare verification logs
         run: mkdir -p verification-logs
-      - name: Record toolchain versions
+
+      - name: Install elan and selected Lean toolchain
         shell: bash
         run: |
-          set -o pipefail
+          set -euo pipefail
           {
+            curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o /tmp/elan-init.sh
+            sh /tmp/elan-init.sh -y --default-toolchain none
+            echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+            export PATH="$HOME/.elan/bin:$PATH"
             echo '--- lean-toolchain ---'
             cat lean-toolchain
             echo '--- lean --version ---'
@@ -37,39 +35,47 @@ jobs:
             echo '--- lake --version ---'
             lake --version
           } 2>&1 | tee verification-logs/toolchain.log
+
       - name: Resolve pinned dependencies
         shell: bash
         run: |
-          set -o pipefail
+          set -euo pipefail
           lake update 2>&1 | tee verification-logs/lake-update.log
+
       - name: Fetch Mathlib build cache
         shell: bash
         run: |
-          set -o pipefail
+          set -euo pipefail
           lake exe cache get 2>&1 | tee verification-logs/mathlib-cache.log
+
       - name: Build project
         shell: bash
         run: |
-          set -o pipefail
+          set -euo pipefail
           lake build 2>&1 | tee verification-logs/lake-build.log
+
       - name: Run explicit axiom report
         shell: bash
         run: |
-          set -o pipefail
+          set -euo pipefail
           lake env lean AxiomAudit.lean 2>&1 | tee verification-logs/axiom-audit.log
+
       - name: Run regression tests
         shell: bash
         run: |
-          set -o pipefail
+          set -euo pipefail
           lake env lean CollatzLean/Tests.lean 2>&1 | tee verification-logs/tests.log
+
       - name: Record resolved Mathlib revision
         if: always()
         shell: bash
         run: |
+          mkdir -p verification-logs
           {
             git -C .lake/packages/mathlib rev-parse HEAD 2>&1 || true
             test ! -f lake-manifest.json || cat lake-manifest.json
           } | tee verification-logs/resolved-dependencies.log
+
       - name: Upload compiler and audit logs
         if: always()
         uses: actions/upload-artifact@v4
