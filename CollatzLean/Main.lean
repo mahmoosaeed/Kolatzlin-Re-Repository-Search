@@ -46,14 +46,17 @@ theorem stripTwosFuel_correct (fuel n : Nat) (hn : 0 < n)
       · have hn2 : 0 < n / 2 := by omega
         have hbound2 : n / 2 ≤ fuel := by omega
         obtain ⟨a, ha, hodd⟩ := ih (n / 2) hn2 hbound2
-        refine ⟨a + 1, ?_, ?_⟩
-        · have hdiv : n = 2 * (n / 2) := by omega
+        have hpow : n = 2 ^ (a + 1) * stripTwosFuel fuel (n / 2) := by
+          have hdiv : n = 2 * (n / 2) := by omega
           calc
             n = 2 * (n / 2) := hdiv
-            _ = 2 * (2 ^ a * stripTwosFuel fuel (n / 2)) := by rw [ha]
+            _ = 2 * (2 ^ a * stripTwosFuel fuel (n / 2)) :=
+              congrArg (fun x => 2 * x) ha
             _ = 2 ^ (a + 1) * stripTwosFuel fuel (n / 2) := by
               rw [pow_succ]
               ring
+        refine ⟨a + 1, ?_, ?_⟩
+        · simpa [stripTwosFuel, heven] using hpow
         · simpa [stripTwosFuel, heven] using hodd
       · have hodd : n % 2 = 1 := by omega
         refine ⟨0, ?_, ?_⟩
