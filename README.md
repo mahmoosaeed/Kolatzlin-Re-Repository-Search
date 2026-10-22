@@ -1,27 +1,20 @@
 # Collatz Lean Research Case Study
 
-This is an auditable Lean 4 + Mathlib research scaffold, not a proof of the Collatz conjecture.
+An auditable Lean 4 + Mathlib research scaffold for the Collatz problem. It is **not a proof of the Collatz conjecture**.
 
-## Contents
-- Ordinary Collatz step and finite orbit.
-- A bounded-fuel accelerated odd-step candidate.
-- Propositions for eventual arrival at one and global strict descent.
-- A kernel-checked equivalence theorem between the Collatz conjecture and the global strict-descent principle.
-- Modular residue lemmas for 3*n+1 = 2^a*u.
-- Regression examples that refute the false claim that every individual step decreases.
-- Proof ledger and open-goal register.
+## Kernel-checked results
+The successful GitHub Actions run [39777970211](https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/39777970211) verified source revision `b12223b47822c49b4653b1361eb72745c26c1fac` with Lean 4.19.0 and Mathlib revision `c44e0c8ee63ca166450922a373c7409c5d26b00b`.
 
-## Verified revision
-GitHub Actions run [39774737649](https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/39774737649) succeeded for commit `7b40f198f9173e98d592f6f54ed7376301f86f09` using Lean 4.19.0 and Mathlib revision `c44e0c8ee63ca166450922a373c7409c5d26b00b`.
+- `stripTwosFuel_correct`: bounded stripping returns an odd factor and proves the power-of-two factorization.
+- `acceleratedOddStep_correct`: the output is the odd factor in `3*n+1 = 2^a * output`.
+- `stripTwosFuel_reachable` and `acceleratedOddStep_reachable`: the accelerated output is an actual positive-time ordinary orbit iterate for positive odd inputs.
+- `acceleratedOddStep_lt_implies_descent`: a strict drop in the accelerated map is sufficient to establish ordinary-orbit descent.
+- `even_input_descends`: even inputs above one descend immediately.
+- `descent_iff_odd_descent`: the global descent principle reduces to odd inputs greater than one.
 
-The run passed:
-- `lake build CollatzLean`
-- `lake env lean AxiomAudit.lean`
-- `lake env lean CollatzLean/Tests.lean`
+The run passed the library build, axiom audit, and regression tests. See the [full CI log artifact](https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/39777970211/artifacts/12425142488).
 
-Download the [`lean-verification-logs` artifact](https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/39774737649/artifacts/12423393467) to inspect the full build, test, dependency, and axiom-audit logs. The audit reports only Lean's standard dependencies `propext`, `Quot.sound`, and, for two declarations, `Classical.choice`.
+## Open research obligations
+The remaining central task is proving that every odd `n > 1` has a positive-time iterate below `n`. In particular, the current conditional theorem does **not** prove that `acceleratedOddStep n < n` for every odd input. The accelerated-path identity is also still an open target.
 
-## Verification boundary
-The successful build verifies the exact source revision above. It does **not** prove the full Collatz conjecture. `CollatzConjecture`, `DescentPrinciple`, and the accelerated-path identity remain open targets. The theorem `collatz_iff_descent` establishes equivalence of two statements, not the truth of either one.
-
-Do not use finite checks as proof of a universal statement, and do not introduce `sorry`, `admit`, or custom axioms to bypass proof obligations. Re-run CI after source changes.
+Do not infer a universal theorem from finite tests. No `sorry`, `admit`, or custom axiom is used to bypass the open Collatz obligation.
