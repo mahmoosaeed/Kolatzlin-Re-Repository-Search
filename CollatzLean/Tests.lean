@@ -42,6 +42,17 @@ example (n : Nat) (hn : 0 < n) :
 example : DescentPrinciple ↔ OddDescentPrinciple :=
   descent_iff_odd_descent
 
+
+/-- The accelerated result is an iterate of the ordinary map for odd inputs. -/
+example (n : Nat) (hn : 0 < n) (hodd : n % 2 = 1) :
+    ∃ k, 0 < k ∧ orbit n k = acceleratedOddStep n :=
+  acceleratedOddStep_reachable n hn hodd
+
+/-- Fuel-bounded stripping itself agrees with some ordinary orbit iterate. -/
+example (fuel n : Nat) (hn : 0 < n) (hbound : n ≤ fuel) :
+    ∃ k, k ≤ fuel ∧ orbit n k = stripTwosFuel fuel n :=
+  stripTwosFuel_reachable fuel n hn hbound
+
 /-- Residue regression test. -/
 example (u : Nat) (h2 : u % 2 = 1) (h3 : u % 3 = 2) :
     u % 6 = 5 :=
