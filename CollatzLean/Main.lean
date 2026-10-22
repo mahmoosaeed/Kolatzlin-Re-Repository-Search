@@ -81,6 +81,11 @@ def ReachesOne (n : Nat) : Prop := ∃ k, orbit n k = 1
 def DescentPrinciple : Prop :=
   ∀ n, 1 < n → ∃ k, 0 < k ∧ orbit n k < n
 
+
+/-- The unresolved part of global descent, restricted to odd inputs. -/
+def OddDescentPrinciple : Prop :=
+  ∀ n, 1 < n → n % 2 = 1 → ∃ k, 0 < k ∧ orbit n k < n
+
 /-- The Collatz conjecture, stated as an open proposition. -/
 def CollatzConjecture : Prop :=
   ∀ n, 0 < n → ReachesOne n
@@ -104,6 +109,29 @@ theorem orbit_pos {n k : Nat} (hn : 0 < n) : 0 < orbit n k := by
   | succ k ih =>
       rw [orbit_succ]
       exact step_pos ih
+
+
+/-- Every even input greater than one has immediate strict descent. -/
+theorem even_input_descends {n : Nat} (hn : 1 < n)
+    (heven : n % 2 = 0) :
+    ∃ k, 0 < k ∧ orbit n k < n := by
+  refine ⟨1, by omega, ?_⟩
+  rw [orbit_succ]
+  unfold step
+  simp [heven]
+  omega
+
+/-- Global strict descent is equivalent to descent for odd inputs only. -/
+theorem descent_iff_odd_descent :
+    DescentPrinciple ↔ OddDescentPrinciple := by
+  constructor
+  · intro h n hn hodd
+    exact h n hn
+  · intro h n hn
+    by_cases heven : n % 2 = 0
+    · exact even_input_descends hn heven
+    · have hodd : n % 2 = 1 := by omega
+      exact h n hn hodd
 
 /-- If Collatz holds, every n > 1 has a strict descent. -/
 theorem reachesOne_implies_descent :
