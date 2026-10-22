@@ -52,7 +52,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          lake build 2>&1 | tee verification-logs/lake-build.log
+          lake build CollatzLean 2>&1 | tee verification-logs/lake-build.log
 
       - name: Run explicit axiom report
         shell: bash
