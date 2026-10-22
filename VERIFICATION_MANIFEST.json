@@ -1,15 +1,37 @@
 {
-  "archive": "CollatzLeanResearch.zip",
-  "verification_status": "REMOTE_GITHUB_ACTIONS_WORKFLOW_COMMITTED; CI_RESULT_PENDING; COMPILER_DIAGNOSTICS_NOT_OBTAINED; AXIOM_AUDIT_NOT_RUN; COLLatz_CONJECTURE_OPEN",
+  "verification_status": "REMOTE_CI_PASSED_FOR_COMMIT_7b40f198f9173e98d592f6f54ed7376301f86f09; COLLATZ_CONJECTURE_OPEN",
   "project_toolchain": "leanprover/lean4:v4.19.0",
+  "lake_version": "5.0.0-6caaee8",
   "mathlib_pin": "v4.19.0",
-  "runtime_checks": {
-    "lean_available_in_original_runtime": false,
-    "lake_available_in_original_runtime": false,
-    "matching_lake_build": "NOT RUN LOCALLY",
-    "kernel_axiom_audit": "PENDING REMOTE CI",
-    "compiler_diagnostics": "PENDING REMOTE CI",
+  "resolved_mathlib_revision": "c44e0c8ee63ca166450922a373c7409c5d26b00b",
+  "successful_github_actions_run": {
+    "run_id": 39774737649,
+    "url": "https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/39774737649",
+    "conclusion": "success",
+    "commit": "7b40f198f9173e98d592f6f54ed7376301f86f09",
+    "artifact_name": "lean-verification-logs",
+    "artifact_id": 12423393467,
+    "artifact_url": "https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/39774737649/artifacts/12423393467",
+    "artifact_sha256": "6c56953ba1094d42ce620f3767bb161bbb5c059103a6c4b27377a32e96039458"
+  },
+  "checks": {
+    "lake_build_CollatzLean": "PASSED",
+    "axiom_audit": "PASSED",
+    "regression_tests": "PASSED",
     "collatz_conjecture": "OPEN / NOT PROVED"
+  },
+  "axiom_audit": {
+    "CollatzLean.orbit_add": ["propext"],
+    "CollatzLean.step_pos": ["propext", "Quot.sound"],
+    "CollatzLean.orbit_pos": ["propext", "Quot.sound"],
+    "CollatzLean.reachesOne_implies_descent": ["propext", "Classical.choice", "Quot.sound"],
+    "CollatzLean.descent_implies_collatz": ["propext", "Quot.sound"],
+    "CollatzLean.collatz_iff_descent": ["propext", "Classical.choice", "Quot.sound"],
+    "CollatzLean.mod_six_eq_one_of_mod_two_one_mod_three_one": ["propext", "Quot.sound"],
+    "CollatzLean.mod_six_eq_five_of_mod_two_one_mod_three_two": ["propext", "Quot.sound"],
+    "CollatzLean.pow_two_mod_three": ["propext", "Quot.sound"],
+    "CollatzLean.quotient_mod_three_from_equation": ["propext", "Quot.sound"],
+    "CollatzLean.quotient_mod_six_from_equation": ["propext", "Quot.sound"]
   },
   "finite_checks": {
     "step_positive_inputs_1_to_10000": 10000,
@@ -18,8 +40,19 @@
     "power_two_mod_three_exponents_0_to_10000": 10001
   },
   "finite_check_interpretation": "Bounded computational checks only; they do not prove any Lean theorem or the Collatz conjecture.",
-  "workflow": ".github/workflows/lean-verification.yml",
-  "workflow_commands": ["lake update", "lake exe cache get", "lake build", "lake env lean AxiomAudit.lean", "lake env lean CollatzLean/Tests.lean"],
-  "artifact": "lean-verification-logs",
-  "status_note": "Manifest written before first remote CI result; update after inspecting the actual workflow run."
+  "first_ci_failure": {
+    "run_id": 39774042296,
+    "cause": "Lean action expected lake-manifest.json before lake update",
+    "resolution": "Replaced the action setup with direct Elan installation followed by lake update"
+  },
+  "second_ci_failure": {
+    "run_id": 39774180274,
+    "cause": "Two redundant omega tactics at Main.lean lines 118 and 121; Lean reported no goals to be solved",
+    "resolution": "Removed the redundant tactics"
+  },
+  "notes": [
+    "The successful build and audit apply only to the exact commit listed above.",
+    "The Collatz conjecture and global descent target remain open.",
+    "The equivalence theorem does not establish either equivalent proposition."
+  ]
 }
