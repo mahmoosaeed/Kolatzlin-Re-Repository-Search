@@ -20,3 +20,5 @@ import CollatzLean.Main
 #print axioms CollatzLean.stripTwosFuel_reachable
 #print axioms CollatzLean.acceleratedOddStep_reachable
 #print axioms CollatzLean.acceleratedOddStep_lt_implies_descent
+
+#print axioms CollatzLean.acceleratedOddStep_lt_of_mod_four_eq_one
