@@ -11,3 +11,9 @@ import CollatzLean.Main
 #print axioms CollatzLean.pow_two_mod_three
 #print axioms CollatzLean.quotient_mod_three_from_equation
 #print axioms CollatzLean.quotient_mod_six_from_equation
+
+#print axioms CollatzLean.stripTwosFuel_correct
+#print axioms CollatzLean.acceleratedOddStep_correct
+#print axioms CollatzLean.acceleratedOddStep_pos
+#print axioms CollatzLean.even_input_descends
+#print axioms CollatzLean.descent_iff_odd_descent
