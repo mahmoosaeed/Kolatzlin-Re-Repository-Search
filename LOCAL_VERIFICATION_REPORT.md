@@ -1,38 +1,45 @@
 # Verification Status Report — CollatzLeanResearch
 
-## Executive status
-**Remote Lean verification succeeded** for commit `7b40f198f9173e98d592f6f54ed7376301f86f09` using Lean 4.19.0 and Mathlib revision `c44e0c8ee63ca166450922a373c7409c5d26b00b`. The library build, explicit `#print axioms` audit, and regression tests all completed successfully.
+## Current verified result
+GitHub Actions run [39777970211](https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/39777970211) succeeded for source revision `b12223b47822c49b4653b1361eb72745c26c1fac`, using Lean 4.19.0 and Mathlib revision `c44e0c8ee63ca166450922a373c7409c5d26b00b`.
 
-- Successful GitHub Actions run: https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/39774737649
-- Log artifact: https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/39774737649/artifacts/12423393467
-- Artifact name: `lean-verification-logs`
-- Artifact SHA-256: `6c56953ba1094d42ce620f3767bb161bbb5c059103a6c4b27377a32e96039458`
+- `lake build CollatzLean`: **PASSED**
+- `lake env lean AxiomAudit.lean`: **PASSED**
+- `lake env lean CollatzLean/Tests.lean`: **PASSED**
+- Artifact: [lean-verification-logs](https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/39777970211/artifacts/12425142488)
+- Artifact SHA-256: `0c8ab2d7755c9783d876d1c1431c8a901fbfe072caf250fe8d3ab87eb76da708`
 
-## Actual results
-- Toolchain: Lean 4.19.0; Lake 5.0.0-6caaee8.
-- Dependency resolution: passed; Mathlib revision `c44e0c8ee63ca166450922a373c7409c5d26b00b`, requested tag `v4.19.0`.
-- Mathlib cache: passed; 6,641 files downloaded on the successful run.
-- `lake build CollatzLean`: **PASSED**.
-- `lake env lean AxiomAudit.lean`: **PASSED**.
-- `lake env lean CollatzLean/Tests.lean`: **PASSED**.
-- Compiler diagnostics repaired from actual logs: removed two redundant `omega` tactics in `pow_two_mod_three` that Lean reported as “no goals to be solved.”
-- An earlier workflow attempt failed because `leanprover/lean-action` required a pre-existing `lake-manifest.json`; the workflow was changed to install Elan directly and run `lake update` before the build. A later run exposed the two redundant tactics above; they were corrected before the successful run.
+## New kernel-checked results
+
+### Bounded factor-of-two stripping
+`stripTwosFuel_correct` proves that for positive `n ≤ fuel`, there exists an exponent `a` such that
+`n = 2^a * stripTwosFuel fuel n`, and the returned factor is odd.
+
+### Accelerated odd step
+- `acceleratedOddStep_correct`: `3*n+1` factors as a power of two times the accelerated output, which is odd.
+- `acceleratedOddStep_pos`: the accelerated output is positive for positive input.
+- `stripTwosFuel_reachable`: the bounded stripping result occurs at some ordinary Collatz orbit index.
+- `acceleratedOddStep_reachable`: for positive odd `n`, the accelerated output occurs at a positive-time ordinary orbit index.
+- `acceleratedOddStep_lt_implies_descent`: if the accelerated output is strictly below an odd input, then that input has a strict ordinary-orbit descent.
+
+### Global descent reduction
+- `even_input_descends`: every even `n > 1` descends in one ordinary step.
+- `descent_iff_odd_descent`: global strict descent is equivalent to strict descent for odd inputs greater than one.
+
+The regression file includes concrete accelerated outputs for inputs 1, 3, 5, and 7, and type-checks the general correctness and reachability statements.
 
 ## Axiom audit
-Exact reported dependencies from `#print axioms`:
-- `CollatzLean.orbit_add`: `[propext]`
-- `CollatzLean.step_pos`: `[propext, Quot.sound]`
-- `CollatzLean.orbit_pos`: `[propext, Quot.sound]`
-- `CollatzLean.reachesOne_implies_descent`: `[propext, Classical.choice, Quot.sound]`
-- `CollatzLean.descent_implies_collatz`: `[propext, Quot.sound]`
-- `CollatzLean.collatz_iff_descent`: `[propext, Classical.choice, Quot.sound]`
-- Both modulo-six lemmas, `pow_two_mod_three`, `quotient_mod_three_from_equation`, and `quotient_mod_six_from_equation`: `[propext, Quot.sound]`
+The new audit reports:
+- `stripTwosFuel_correct`, `acceleratedOddStep_correct`, and `acceleratedOddStep_pos`: `[propext, Classical.choice, Quot.sound]`.
+- `stripTwosFuel_reachable`, `acceleratedOddStep_reachable`, `acceleratedOddStep_lt_implies_descent`, `even_input_descends`, and `descent_iff_odd_descent`: `[propext, Quot.sound]`.
 
-These are Lean's standard logical/equality axioms; this audit output does not show a user-declared axiom or a `sorryAx` dependency for the listed declarations. It is still important to distinguish this audit from proving the open Collatz target.
+The remaining audited declarations report the standard dependencies already recorded in `VERIFICATION_MANIFEST.json`. No audited declaration reports `sorryAx` or a user-declared custom axiom. `Classical.choice` appears in the existential factorization results; the reachability and descent reductions do not require it in their reported dependencies.
 
-## Verification boundary
-- The named library and the regression file compiled under the pinned toolchain.
-- The audit covers only the declarations listed in `AxiomAudit.lean`.
-- `CollatzConjecture`, `DescentPrinciple`, and `AcceleratedPathIdentityTarget` remain open targets. `collatz_iff_descent` proves an equivalence between the Collatz conjecture and the global descent principle; it does not prove either side.
-- Finite Python checks are bounded computation, not a proof of a universal statement.
-- The successful result applies to the exact source revision named above; subsequent edits require a fresh run.
+## What remains open
+- The Collatz conjecture remains **OPEN / NOT PROVED**.
+- The odd-input descent obligation remains open: one must show that every odd `n > 1` has some positive-time iterate below `n`.
+- The theorem `acceleratedOddStep_lt_implies_descent` is conditional. It does not prove `acceleratedOddStep n < n` for every odd `n > 1`.
+- The proposed accelerated-path identity remains a target, not a theorem.
+- The audit covers the explicit declarations in `AxiomAudit.lean`; it does not imply that open targets have been solved.
+
+The successful run verifies the code revision identified above. Any subsequent source changes must be rechecked by CI.
