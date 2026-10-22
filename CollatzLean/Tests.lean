@@ -65,5 +65,11 @@ example (u : Nat) (h2 : u % 2 = 1) (h3 : u % 3 = 2) :
     u % 6 = 5 :=
   mod_six_eq_five_of_mod_two_one_mod_three_two u h2 h3
 
+
+/-- Residue class 1 modulo 4 has strict accelerated descent. -/
+example (n : Nat) (hn : 1 < n) (hmod : n % 4 = 1) :
+    acceleratedOddStep n < n :=
+  acceleratedOddStep_lt_of_mod_four_eq_one hn hmod
+
 #check CollatzConjecture
 #check GlobalDescentTarget
