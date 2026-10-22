@@ -42,7 +42,7 @@ example (n : Nat) (hn : 0 < n) :
 example : DescentPrinciple ↔ OddDescentPrinciple :=
   descent_iff_odd_descent
 
-/-- Residue regression test. -
+/-- Residue regression test. -/
 example (u : Nat) (h2 : u % 2 = 1) (h3 : u % 3 = 2) :
     u % 6 = 5 :=
   mod_six_eq_five_of_mod_two_one_mod_three_two u h2 h3
