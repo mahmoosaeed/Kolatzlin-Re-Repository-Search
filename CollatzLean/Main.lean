@@ -441,4 +441,33 @@ theorem acceleratedPathIdentity
               rw [Finset.sum_range_succ]
               ring
 
+
+/--
+A quantitative sufficient condition for descent along an accelerated path:
+if the accumulated power-of-two factor times the initial value exceeds
+the exact right-hand side of the path identity, then the terminal value
+is strictly below the initial value. This is conditional, not a universal
+Collatz descent theorem.
+-/
+theorem acceleratedPathIdentity_conditional_descent
+    (n : Nat) (xs exps : Nat → Nat) (r : Nat)
+    (hstart : xs 0 = n)
+    (hstep : ∀ i, i < r →
+      2 ^ (exps i) * xs (i + 1) = 3 * xs i + 1)
+    (hn : 0 < n)
+    (hbound :
+      (3 ^ r) * n +
+        ∑ i ∈ Finset.range r,
+          (3 ^ (r - 1 - i)) *
+            (2 ^ (∑ j ∈ Finset.range i, exps j)) <
+      (2 ^ (∑ i ∈ Finset.range r, exps i)) * n) :
+    xs r < n := by
+  have hid := acceleratedPathIdentity n xs exps r hstart hstep
+  by_contra hnot
+  have hle : n ≤ xs r := by omega
+  have hmul := Nat.mul_le_mul_left
+    (2 ^ (∑ i ∈ Finset.range r, exps i)) hle
+  rw [hid] at hmul
+  omega
+
 end CollatzLean
