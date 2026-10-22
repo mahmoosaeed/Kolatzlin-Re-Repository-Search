@@ -100,6 +100,52 @@ theorem orbit_add (n k j : Nat) :
   | zero => simp [orbit]
   | succ j ih => simp [orbit, ih, Nat.add_succ]
 
+
+/--
+The bounded stripping routine follows an actual ordinary Collatz orbit.
+The fuel bound ensures it stops before exhausting fuel on a positive input.
+-/
+theorem stripTwosFuel_reachable (fuel n : Nat) (hn : 0 < n)
+    (hbound : n ≤ fuel) :
+    ∃ k, k ≤ fuel ∧ orbit n k = stripTwosFuel fuel n := by
+  induction fuel generalizing n with
+  | zero => omega
+  | succ fuel ih =>
+      by_cases heven : n % 2 = 0
+      · have hn2 : 0 < n / 2 := by omega
+        have hbound2 : n / 2 ≤ fuel := by omega
+        obtain ⟨k, hk, hEq⟩ := ih (n / 2) hn2 hbound2
+        refine ⟨k + 1, by omega, ?_⟩
+        have hstep : step n = n / 2 := by simp [step, heven]
+        have hidx : k + 1 = 1 + k := by omega
+        calc
+          orbit n (k + 1) = orbit n (1 + k) := by rw [hidx]
+          _ = orbit (orbit n 1) k := (orbit_add n 1 k).symm
+          _ = orbit (step n) k := by rw [orbit_succ]
+          _ = orbit (n / 2) k := by rw [hstep]
+          _ = stripTwosFuel fuel (n / 2) := hEq
+          _ = stripTwosFuel (fuel + 1) n := by
+            simp [stripTwosFuel, heven]
+      · refine ⟨0, by omega, ?_⟩
+        simp [orbit, stripTwosFuel, heven]
+
+/-- On positive odd inputs, the accelerated output occurs on the ordinary orbit. -/
+theorem acceleratedOddStep_reachable (n : Nat) (hn : 0 < n)
+    (hodd : n % 2 = 1) :
+    ∃ k, 0 < k ∧ orbit n k = acceleratedOddStep n := by
+  obtain ⟨j, _, hj⟩ :=
+    stripTwosFuel_reachable (3 * n + 1) (3 * n + 1) (by omega) le_rfl
+  refine ⟨j + 1, by omega, ?_⟩
+  have hstep : step n = 3 * n + 1 := by simp [step, hodd]
+  have hidx : j + 1 = 1 + j := by omega
+  calc
+    orbit n (j + 1) = orbit n (1 + j) := by rw [hidx]
+    _ = orbit (orbit n 1) j := (orbit_add n 1 j).symm
+    _ = orbit (step n) j := by rw [orbit_succ]
+    _ = orbit (3 * n + 1) j := by rw [hstep]
+    _ = stripTwosFuel (3 * n + 1) (3 * n + 1) := hj
+    _ = acceleratedOddStep n := by rfl
+
 /-- One ordinary Collatz step preserves positivity. -/
 theorem step_pos {n : Nat} (hn : 0 < n) : 0 < step n := by
   unfold step
