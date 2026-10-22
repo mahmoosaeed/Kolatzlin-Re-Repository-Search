@@ -19,3 +19,4 @@ import CollatzLean.Main
 #print axioms CollatzLean.descent_iff_odd_descent
 #print axioms CollatzLean.stripTwosFuel_reachable
 #print axioms CollatzLean.acceleratedOddStep_reachable
+#print axioms CollatzLean.acceleratedOddStep_lt_implies_descent
