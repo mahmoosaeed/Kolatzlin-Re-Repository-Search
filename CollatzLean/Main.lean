@@ -60,7 +60,7 @@ theorem stripTwosFuel_correct (fuel n : Nat) (hn : 0 < n)
         · simpa [stripTwosFuel, heven] using hodd
       · have hodd : n % 2 = 1 := by omega
         refine ⟨0, ?_, ?_⟩
-        · simpa [stripTwosFuel, heven] using (show n = 2 ^ 0 * n by simp)
+        · simp [stripTwosFuel, heven]
         · simpa [stripTwosFuel, heven] using hodd
 
 /-- The accelerated odd step returns an odd factor of 3*n+1. -/
@@ -145,6 +145,15 @@ theorem acceleratedOddStep_reachable (n : Nat) (hn : 0 < n)
     _ = orbit (3 * n + 1) j := by rw [hstep]
     _ = stripTwosFuel (3 * n + 1) (3 * n + 1) := hj
     _ = acceleratedOddStep n := by rfl
+
+
+/-- If the accelerated odd-step output is smaller, odd-input descent follows. -/
+theorem acceleratedOddStep_lt_implies_descent {n : Nat}
+    (hn : 0 < n) (hodd : n % 2 = 1)
+    (hsmall : acceleratedOddStep n < n) :
+    ∃ k, 0 < k ∧ orbit n k < n := by
+  obtain ⟨k, hk, hreach⟩ := acceleratedOddStep_reachable n hn hodd
+  exact ⟨k, hk, by rw [hreach]; exact hsmall⟩
 
 /-- One ordinary Collatz step preserves positivity. -/
 theorem step_pos {n : Nat} (hn : 0 < n) : 0 < step n := by
