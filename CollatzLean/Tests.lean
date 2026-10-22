@@ -53,6 +53,13 @@ example (fuel n : Nat) (hn : 0 < n) (hbound : n ≤ fuel) :
     ∃ k, k ≤ fuel ∧ orbit n k = stripTwosFuel fuel n :=
   stripTwosFuel_reachable fuel n hn hbound
 
+
+/-- Any strict drop of the accelerated output certifies odd-input descent. -/
+example (n : Nat) (hn : 0 < n) (hodd : n % 2 = 1)
+    (hsmall : acceleratedOddStep n < n) :
+    ∃ k, 0 < k ∧ orbit n k < n :=
+  acceleratedOddStep_lt_implies_descent hn hodd hsmall
+
 /-- Residue regression test. -/
 example (u : Nat) (h2 : u % 2 = 1) (h3 : u % 3 = 2) :
     u % 6 = 5 :=
