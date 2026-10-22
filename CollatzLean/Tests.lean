@@ -71,5 +71,17 @@ example (n : Nat) (hn : 1 < n) (hmod : n % 4 = 1) :
     acceleratedOddStep n < n :=
   acceleratedOddStep_lt_of_mod_four_eq_one hn hmod
 
+
+/-- Mod-four class 3 is an explicit obstruction to immediate accelerated descent. -/
+example (n : Nat) (hn : 1 < n) (hmod : n % 4 = 3) :
+    n < acceleratedOddStep n :=
+  acceleratedOddStep_gt_of_mod_four_eq_three hn hmod
+
+example : acceleratedOddStep 3 = 5 := by
+  norm_num [acceleratedOddStep, stripTwosFuel]
+
+example : acceleratedOddStep 7 = 11 := by
+  norm_num [acceleratedOddStep, stripTwosFuel]
+
 #check CollatzConjecture
 #check GlobalDescentTarget
