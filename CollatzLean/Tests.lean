@@ -83,5 +83,33 @@ example : acceleratedOddStep 3 = 5 := by
 example : acceleratedOddStep 7 = 11 := by
   norm_num [acceleratedOddStep, stripTwosFuel]
 
+
+/-- General exact accelerated-path identity, checked at the theorem interface. -/
+example (n : Nat) (xs exps : Nat → Nat) (r : Nat)
+    (hstart : xs 0 = n)
+    (hstep : ∀ i, i < r →
+      2 ^ (exps i) * xs (i + 1) = 3 * xs i + 1) :
+    (2 ^ (∑ i ∈ Finset.range r, exps i)) * xs r =
+      (3 ^ r) * n +
+        ∑ i ∈ Finset.range r,
+          (3 ^ (r - 1 - i)) *
+            (2 ^ (∑ j ∈ Finset.range i, exps j)) :=
+  acceleratedPathIdentity n xs exps r hstart hstep
+
+/-- Descent follows from the explicit quantitative bound, when it holds. -/
+example (n : Nat) (xs exps : Nat → Nat) (r : Nat)
+    (hstart : xs 0 = n)
+    (hstep : ∀ i, i < r →
+      2 ^ (exps i) * xs (i + 1) = 3 * xs i + 1)
+    (hn : 0 < n)
+    (hbound :
+      (3 ^ r) * n +
+        ∑ i ∈ Finset.range r,
+          (3 ^ (r - 1 - i)) *
+            (2 ^ (∑ j ∈ Finset.range i, exps j)) <
+      (2 ^ (∑ i ∈ Finset.range r, exps i)) * n) :
+    xs r < n :=
+  acceleratedPathIdentity_conditional_descent n xs exps r hstart hstep hn hbound
+
 #check CollatzConjecture
 #check GlobalDescentTarget
