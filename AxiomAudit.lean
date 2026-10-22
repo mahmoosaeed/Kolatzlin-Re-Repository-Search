@@ -24,3 +24,6 @@ import CollatzLean.Main
 #print axioms CollatzLean.acceleratedOddStep_lt_of_mod_four_eq_one
 
 #print axioms CollatzLean.acceleratedOddStep_gt_of_mod_four_eq_three
+
+#print axioms CollatzLean.acceleratedPathIdentity
+#print axioms CollatzLean.acceleratedPathIdentity_conditional_descent
