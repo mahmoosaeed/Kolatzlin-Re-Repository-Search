@@ -121,7 +121,7 @@ theorem stripTwosFuel_reachable (fuel n : Nat) (hn : 0 < n)
         calc
           orbit n (k + 1) = orbit n (1 + k) := by rw [hidx]
           _ = orbit (orbit n 1) k := (orbit_add n 1 k).symm
-          _ = orbit (step n) k := by rw [orbit_succ]
+          _ = orbit (step n) k := by simp [orbit]
           _ = orbit (n / 2) k := by rw [hstep]
           _ = stripTwosFuel fuel (n / 2) := hEq
           _ = stripTwosFuel (fuel + 1) n := by
@@ -141,7 +141,7 @@ theorem acceleratedOddStep_reachable (n : Nat) (hn : 0 < n)
   calc
     orbit n (j + 1) = orbit n (1 + j) := by rw [hidx]
     _ = orbit (orbit n 1) j := (orbit_add n 1 j).symm
-    _ = orbit (step n) j := by rw [orbit_succ]
+    _ = orbit (step n) j := by simp [orbit]
     _ = orbit (3 * n + 1) j := by rw [hstep]
     _ = stripTwosFuel (3 * n + 1) (3 * n + 1) := hj
     _ = acceleratedOddStep n := by rfl
