@@ -115,10 +115,8 @@ theorem pow_two_mod_three (a : Nat) :
       by_cases h : a % 2 = 0
       · have h' : (a + 1) % 2 = 1 := by omega
         simp [ih, h, h']
-        omega
       · have h' : (a + 1) % 2 = 0 := by omega
         simp [ih, h, h']
-        omega
 
 /-- Factorization 3*n+1 = 2^a*u fixes u modulo 3. -/
 theorem quotient_mod_three_from_equation
