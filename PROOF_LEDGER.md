@@ -1,6 +1,6 @@
 # Proof ledger
 
-Status policy: a proof body is a candidate until successfully compiled; file/archive integrity is not Lean verification; label a theorem kernel-checked only after a successful lake build and inspection of #print axioms.
+Status policy: the status “kernel-checked” requires a successful build and recorded axiom audit for the exact source revision. The full Collatz conjecture remains open.
 
 | ID | Declaration | Role | Status |
 |---|---|---|---|
@@ -11,15 +11,22 @@ Status policy: a proof body is a candidate until successfully compiled; file/arc
 | D-005 | ReachesOne | Some orbit iterate equals one | Definition |
 | D-006 | DescentPrinciple | Positive-time descent for every n > 1 | Open proposition |
 | D-007 | CollatzConjecture | Every positive input reaches one | Open proposition |
-| P-001 | orbit_add | Iterate composition | Candidate; not compiled |
-| P-002 | step_pos | Positivity after one step | Candidate; not compiled |
-| P-003 | orbit_pos | Positivity of finite iterates | Candidate; not compiled |
-| P-004 | reachesOne_implies_descent | Collatz implies descent | Candidate; not compiled |
-| P-005 | descent_implies_collatz | Descent implies Collatz by induction | Candidate; not compiled |
-| P-006 | collatz_iff_descent | Equivalence of open targets | Candidate; not compiled |
-| P-007–P-011 | Modular residue lemmas | Arithmetic residue facts | Candidates; not compiled |
-| T-001–T-003 | Regression examples | Detect false one-step descent and test even descent | Candidates; not compiled |
+| P-001 | orbit_add | Iterate composition | Kernel-checked in CI commit 7b40f198 |
+| P-002 | step_pos | Positivity after one step | Kernel-checked in CI commit 7b40f198 |
+| P-003 | orbit_pos | Positivity of finite iterates | Kernel-checked in CI commit 7b40f198 |
+| P-004 | reachesOne_implies_descent | Collatz implies descent | Kernel-checked conditional theorem in CI commit 7b40f198 |
+| P-005 | descent_implies_collatz | Descent implies Collatz by induction | Kernel-checked conditional theorem in CI commit 7b40f198 |
+| P-006 | collatz_iff_descent | Equivalence of open targets | Kernel-checked equivalence; neither side is thereby proved |
+| P-007–P-011 | Modular residue lemmas | Arithmetic residue facts | Kernel-checked in CI commit 7b40f198 |
+| T-001–T-003 | Regression examples | Detect false one-step descent and test even descent | Lean-checked in CI commit 7b40f198 |
 | O-001 | AcceleratedPathIdentityTarget | Intended accelerated identity | Open target |
 | O-002 | GlobalDescentTarget | Global descent | Open target |
 
-No successful Lean build or #print axioms output is claimed here. The full Collatz conjecture remains open in this project.
+## Exact verification record
+- Toolchain: Lean 4.19.0; Lake 5.0.0-6caaee8.
+- Mathlib revision: c44e0c8ee63ca166450922a373c7409c5d26b00b.
+- Successful CI run: https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/39774737649
+- Axiom-audit dependencies are listed in VERIFICATION_MANIFEST.json and the CI artifact.
+- No listed declaration depends on sorryAx or a user-declared custom axiom; observed dependencies are propext, Quot.sound, and Classical.choice for two declarations.
+
+The full Collatz conjecture is NOT PROVED. The equivalence theorem only shows that the conjecture and the global strict-descent principle imply each other.
