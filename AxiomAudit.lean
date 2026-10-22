@@ -17,3 +17,5 @@ import CollatzLean.Main
 #print axioms CollatzLean.acceleratedOddStep_pos
 #print axioms CollatzLean.even_input_descends
 #print axioms CollatzLean.descent_iff_odd_descent
+#print axioms CollatzLean.stripTwosFuel_reachable
+#print axioms CollatzLean.acceleratedOddStep_reachable
