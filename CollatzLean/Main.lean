@@ -407,7 +407,7 @@ theorem acceleratedPathIdentity
         rw [hexp, Nat.pow_succ]
         ring
       have hlast :
-          (3 ^ ((r + 1) - 1 - r)) *
+          (3 ^ (r - r)) *
             (2 ^ (∑ j ∈ Finset.range r, exps j)) = 2 ^ E := by
         simp [E]
       simp only [Finset.sum_range_succ] at ih' ⊢
@@ -444,12 +444,12 @@ theorem acceleratedPathIdentity
               (∑ i ∈ Finset.range r,
                 (3 ^ (r - i)) *
                   (2 ^ (∑ j ∈ Finset.range i, exps j))) +
-              (3 ^ ((r + 1) - 1 - r)) *
+              (3 ^ (r - r)) *
                 (2 ^ (∑ j ∈ Finset.range r, exps j)) := by
               rw [hlast]
         _ = 3 ^ (r + 1) * n +
               ∑ i ∈ Finset.range (r + 1),
-                (3 ^ ((r + 1) - 1 - i)) *
+                (3 ^ (r - i)) *
                   (2 ^ (∑ j ∈ Finset.range i, exps j)) := by
               simp only [Finset.sum_range_succ, Nat.succ_sub_one]
 
