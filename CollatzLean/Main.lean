@@ -412,8 +412,6 @@ theorem acceleratedPathIdentity
         simp [E]
       simp only [Finset.sum_range_succ] at ih' ⊢
       dsimp [E, S] at ih' ⊢
-      have hsub : r + 1 - 1 = r := by omega
-      simp_rw [hsub] at ih' ⊢
       rw [Nat.pow_add]
       calc
         (2 ^ (∑ i ∈ Finset.range r, exps i) * 2 ^ exps r) * xs (r + 1)
