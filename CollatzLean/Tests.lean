@@ -134,5 +134,15 @@ example (n : Nat) (xs exps : Nat → Nat) (r : Nat)
     xs r < n :=
   acceleratedPath_coarse_bound_implies_descent n xs exps r hstart hstep hlarge hn hthreshold
 
+
+/-- Every exponent in an odd-to-odd accelerated path is at least one. -/
+example (xs exps : Nat → Nat) (r : Nat)
+    (hodd : ∀ i, i ≤ r → xs i % 2 = 1)
+    (hstep : ∀ i, i < r →
+      2 ^ (exps i) * xs (i + 1) = 3 * xs i + 1) :
+    r ≤ ∑ i ∈ Finset.range r, exps i :=
+  acceleratedPath_exponent_sum_ge_length xs exps r hodd hstep
+
+
 #check CollatzConjecture
 #check GlobalDescentTarget
