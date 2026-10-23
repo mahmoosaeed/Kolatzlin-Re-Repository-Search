@@ -29,3 +29,5 @@ import CollatzLean.Main
 #print axioms CollatzLean.acceleratedPathIdentity_conditional_descent
 
 #print axioms CollatzLean.acceleratedPath_coarse_exponent_bound
+
+#print axioms CollatzLean.acceleratedPath_coarse_bound_implies_descent
