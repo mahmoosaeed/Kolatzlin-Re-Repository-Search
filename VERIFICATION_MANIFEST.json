@@ -1,19 +1,20 @@
 {
-  "verification_status": "REMOTE_CI_PASSED; ACCELERATED_CORRECTNESS_AND_REACHABILITY_KERNEL_CHECKED; COLLATZ_CONJECTURE_OPEN",
-  "verified_source_revision": "b12223b47822c49b4653b1361eb72745c26c1fac",
+  "verification_status": "REMOTE_CI_PASSED; ACCELERATED_PATH_IDENTITY_AND_CONDITIONAL_DESCENT_KERNEL_CHECKED; COLLATZ_CONJECTURE_OPEN",
+  "verified_source_revision": "e502e8653204e5024e3fdfc44b2d161463a3e7ae",
   "project_toolchain": "leanprover/lean4:v4.19.0",
   "lake_version": "5.0.0-6caaee8",
   "mathlib_pin": "v4.19.0",
   "resolved_mathlib_revision": "c44e0c8ee63ca166450922a373c7409c5d26b00b",
   "successful_github_actions_run": {
-    "run_id": 39777970211,
-    "url": "https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/39777970211",
+    "run_id": 40007690102,
+    "run_number": 55,
+    "url": "https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/40007690102",
     "conclusion": "success",
-    "commit": "b12223b47822c49b4653b1361eb72745c26c1fac",
+    "commit": "e502e8653204e5024e3fdfc44b2d161463a3e7ae",
     "artifact_name": "lean-verification-logs",
-    "artifact_id": 12425142488,
-    "artifact_url": "https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/39777970211/artifacts/12425142488",
-    "artifact_sha256": "0c8ab2d7755c9783d876d1c1431c8a901fbfe072caf250fe8d3ab87eb76da708"
+    "artifact_id": 12524214136,
+    "artifact_url": "https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/40007690102/artifacts/12524214136",
+    "artifact_sha256": "0dc54ad3d2f6870f98973bc416564db2d2a8f7673845f425143ea653ed890ca3"
   },
   "checks": {
     "lake_build_CollatzLean": "PASSED",
@@ -22,14 +23,51 @@
     "collatz_conjecture": "OPEN / NOT PROVED"
   },
   "new_verified_declarations": {
-    "CollatzLean.stripTwosFuel_correct": ["propext", "Classical.choice", "Quot.sound"],
-    "CollatzLean.acceleratedOddStep_correct": ["propext", "Classical.choice", "Quot.sound"],
-    "CollatzLean.acceleratedOddStep_pos": ["propext", "Classical.choice", "Quot.sound"],
-    "CollatzLean.stripTwosFuel_reachable": ["propext", "Quot.sound"],
-    "CollatzLean.acceleratedOddStep_reachable": ["propext", "Quot.sound"],
-    "CollatzLean.acceleratedOddStep_lt_implies_descent": ["propext", "Quot.sound"],
-    "CollatzLean.even_input_descends": ["propext", "Quot.sound"],
-    "CollatzLean.descent_iff_odd_descent": ["propext", "Quot.sound"]
+    "CollatzLean.stripTwosFuel_correct": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "CollatzLean.acceleratedOddStep_correct": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "CollatzLean.acceleratedOddStep_pos": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "CollatzLean.stripTwosFuel_reachable": [
+      "propext",
+      "Quot.sound"
+    ],
+    "CollatzLean.acceleratedOddStep_reachable": [
+      "propext",
+      "Quot.sound"
+    ],
+    "CollatzLean.acceleratedOddStep_lt_implies_descent": [
+      "propext",
+      "Quot.sound"
+    ],
+    "CollatzLean.even_input_descends": [
+      "propext",
+      "Quot.sound"
+    ],
+    "CollatzLean.descent_iff_odd_descent": [
+      "propext",
+      "Quot.sound"
+    ],
+    "CollatzLean.acceleratedPathIdentity": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "CollatzLean.acceleratedPathIdentity_conditional_descent": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
   },
   "finite_checks": {
     "step_positive_inputs_1_to_10000": 10000,
@@ -39,14 +77,17 @@
   },
   "finite_check_interpretation": "Bounded computational checks only; they do not prove a universal statement.",
   "open_targets": [
+    "Prove a universal accumulated-exponent bound sufficient for descent, or find a different decreasing invariant.",
     "Prove strict descent for every odd n > 1.",
-    "Prove the accelerated-path identity target.",
     "Do not claim the Collatz conjecture is proved."
   ],
   "notes": [
     "The accelerated output is formally shown to be an ordinary orbit iterate for positive odd inputs.",
     "A strict drop in acceleratedOddStep implies ordinary-orbit descent, but universal strict drop remains unproved.",
     "The audit covers only the explicit declarations listed in AxiomAudit.lean.",
-    "No audited declaration reports sorryAx or a user-declared custom axiom."
+    "No audited declaration reports sorryAx or a user-declared custom axiom.",
+    "The exact finite accelerated-path identity is kernel-checked: 2^(A_r) * x_r = 3^r * x_0 + sum_{i<r} 3^(r-1-i) * 2^(A_i), where A_i = sum_{j<i} a_j and each block satisfies 2^(a_i) * x_(i+1) = 3*x_i + 1.",
+    "Conditional descent is kernel-checked when the exact identity's right-hand side is strictly less than 2^(A_r) * x_0; this does not establish that the inequality always holds.",
+    "The successful explicit audit for the two new declarations reports [propext, Classical.choice, Quot.sound], with no sorryAx or user-declared custom axiom reported."
   ]
 }
