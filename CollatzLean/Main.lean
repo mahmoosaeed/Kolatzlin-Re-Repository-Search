@@ -451,7 +451,8 @@ theorem acceleratedPathIdentity
                 (3 ^ (r - i)) *
                   (2 ^ (∑ j ∈ Finset.range i, exps j)) := by
               rw [Finset.sum_range_succ]
-              simp [Nat.sub_self, pow_zero, one_mul, add_assoc]
+              simp only [Nat.sub_self, pow_zero, one_mul]
+              ac_rfl
 
 /--
 A quantitative sufficient condition for descent along an accelerated path:
