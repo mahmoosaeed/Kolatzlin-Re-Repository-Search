@@ -410,6 +410,16 @@ theorem acceleratedPathIdentity
           (3 ^ (r - r)) *
             (2 ^ (∑ j ∈ Finset.range r, exps j)) = 2 ^ E := by
         simp [E]
+      have hsum_final :
+          (∑ i ∈ Finset.range (r + 1),
+            ((3 ^ (r - i)) *
+              (2 ^ (∑ j ∈ Finset.range i, exps j)))) =
+          ((∑ i ∈ Finset.range r,
+            ((3 ^ (r - i)) *
+              (2 ^ (∑ j ∈ Finset.range i, exps j)))) +
+            (3 ^ (r - r)) *
+              (2 ^ (∑ j ∈ Finset.range r, exps j))) := by
+        rw [Finset.sum_range_succ]
       simp only [Finset.sum_range_succ] at ih' ⊢
       dsimp [E, S] at ih' ⊢
       rw [Nat.pow_add]
@@ -449,8 +459,8 @@ theorem acceleratedPathIdentity
         _ = 3 ^ (r + 1) * n +
               (∑ i ∈ Finset.range (r + 1),
                 ((3 ^ (r - i)) *
-                  (2 ^ (∑ j ∈ Finset.range i, exps j))) ) := by
-              rw [Finset.sum_range_succ]
+                  (2 ^ (∑ j ∈ Finset.range i, exps j)))) := by
+              rw [hsum_final]
               simp only [Nat.sub_self, pow_zero, one_mul]
               ac_rfl
 
