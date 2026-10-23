@@ -35,3 +35,5 @@ import CollatzLean.Main
 #print axioms CollatzLean.acceleratedPath_exponent_sum_ge_length
 
 #print axioms CollatzLean.acceleratedPath_exponent_ge_one_add_mod_four_count
+
+#print axioms CollatzLean.acceleratedPath_mod_four_count_implies_descent
