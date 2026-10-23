@@ -544,4 +544,30 @@ theorem acceleratedPath_coarse_exponent_bound
         _ ≤ 10 * ((10 ^ r) * n) := Nat.mul_le_mul_left 10 ih'
         _ = (10 ^ r * 10) * n := by ring
 
+
+/--
+If the accumulated exponents beat the explicit threshold
+2^(A_r) * 3^r > 10^r, then a path staying at least 3 before its
+terminal state must descend below its starting value. The lower bound
+on n is required to turn the strict factor inequality into strict descent.
+-/
+theorem acceleratedPath_coarse_bound_implies_descent
+    (n : Nat) (xs exps : Nat → Nat) (r : Nat)
+    (hstart : xs 0 = n)
+    (hstep : ∀ i, i < r →
+      2 ^ (exps i) * xs (i + 1) = 3 * xs i + 1)
+    (hlarge : ∀ i, i < r → 3 ≤ xs i)
+    (hn : 0 < n)
+    (hthreshold :
+      10 ^ r < (3 ^ r) * (2 ^ (∑ i ∈ Finset.range r, exps i))) :
+    xs r < n := by
+  have hbound := acceleratedPath_coarse_exponent_bound
+    n xs exps r hstart hstep hlarge
+  by_contra hnot
+  have hle : n ≤ xs r := by omega
+  have hmul := Nat.mul_le_mul_left
+    ((3 ^ r) * (2 ^ (∑ i ∈ Finset.range r, exps i))) hle
+  have hstrict := Nat.mul_lt_mul_of_pos_right hthreshold hn
+  omega
+
 end CollatzLean
