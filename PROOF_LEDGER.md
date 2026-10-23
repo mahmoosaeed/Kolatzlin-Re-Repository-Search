@@ -34,17 +34,20 @@ Status policy: “kernel-checked” means the declaration was compiled in the st
 | T-001–T-003 | Original regression examples | Falsify universal one-step descent; test even descent | Lean-checked |
 | T-004 | Accelerated examples 1, 3, 5, 7 | Concrete outputs | Lean-checked |
 | T-005 | General factorization/reachability contracts | Type-check theorem contracts | Lean-checked |
-| O-001 | AcceleratedPathIdentityTarget | Intended accelerated identity | Open target; not yet proved as a Lean theorem |
-| O-002 | GlobalDescentTarget | Global descent | Open target |
-| O-003 | Uniform/finite-step descent from residue constraints and path identity | Requires a new bound on accumulated exponents or a different invariant | Open; residue congruences alone currently yield no finite-step descent theorem |
+| P-024 | acceleratedPathIdentity | Exact identity for every finite accelerated path satisfying the block equations | Kernel-checked; CI run 52 |
+| P-025 | acceleratedPathIdentity_conditional_descent | The accumulated-exponent inequality is a sufficient condition for terminal descent | Kernel-checked; CI run 52 |
+| T-006 | Path identity and conditional-descent interface regressions | Theorem contracts type-check under Lean | Passed; CI run 52 |
+| P-026 | Axiom audit for acceleratedPathIdentity and acceleratedPathIdentity_conditional_descent | Dependencies are `propext`, `Classical.choice`, `Quot.sound`; no `sorryAx` or user-declared custom axiom reported | Passed; CI run 52 |
+| O-002 | GlobalDescentTarget | Prove strict descent for every odd input greater than 1 | Open target |
+| O-003 | Uniform/finite-step descent from residue constraints and path identity | Need a universal quantitative bound on accumulated exponents or a different decreasing invariant | Open; current results do not establish universal finite-step descent |
 
 ## Exact CI record
-- Current verified source revision: `c75194812b47a81eefff61f91b7909a6bb9253a0`
-- Lean: 4.19.0
-- Mathlib revision: `c44e0c8ee63ca166450922a373c7409c5d26b00b`
-- Mod-four theorem build: https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/39782928541
-- Mod-four regression tests: https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/39782950733
-- Final build, regression tests, and explicit axiom audit: https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/39782957966
-- The Collatz conjecture remains **NOT PROVED**.
+- Verified source commit (the exact tree used by the successful run): `e502e8653204e5024e3fdfc44b2d161463a3e7ae`
+- Successful CI run 52: https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/40007690102
+- Verification artifact: [lean-verification-logs](https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/40007690102/artifacts/12524214136)
+- Artifact digest: `sha256:0dc54ad3d2f6870f98973bc416564db2d2a8f7673845f425143ea653ed890ca3`
+- Checks: `lake build CollatzLean` **PASSED**; explicit axiom audit **PASSED**; regression tests **PASSED**.
+- Lean: 4.19.0; Mathlib revision: `c44e0c8ee63ca166450922a373c7409c5d26b00b`.
+- The Collatz conjecture remains **NOT PROVED**. The path identity is proved, but the inequality needed for universal descent is not.
 
-The Collatz conjecture is **NOT PROVED**. Proving descent for every odd input remains the central open obligation.
+The Collatz conjecture is **NOT PROVED**. The exact path identity is now formalized; proving a universal descent guarantee remains the central open obligation.
