@@ -598,4 +598,56 @@ theorem acceleratedPath_exponent_sum_ge_length
       intro i hi
       exact hexp i (Finset.mem_range.mp hi)
 
+
+/--
+A sharper local exponent bound: an odd state congruent to 1 modulo 4
+forces exponent at least 2; every odd-to-odd step forces exponent at
+least 1. Thus the number of 1-mod-4 states contributes an extra unit to
+the accumulated exponent.
+-/
+theorem acceleratedPath_exponent_ge_one_add_mod_four_count
+    (xs exps : Nat → Nat) (r : Nat)
+    (hodd : ∀ i, i ≤ r → xs i % 2 = 1)
+    (hstep : ∀ i, i < r →
+      2 ^ (exps i) * xs (i + 1) = 3 * xs i + 1) :
+    r + (∑ i ∈ Finset.range r,
+      (if xs i % 4 = 1 then 1 else 0))
+      ≤ ∑ i ∈ Finset.range r, exps i := by
+  have hlocal : ∀ i, i < r →
+      1 + (if xs i % 4 = 1 then 1 else 0) ≤ exps i := by
+    intro i hi
+    have hodd_i := hodd i (by omega)
+    have hodd_next := hodd (i + 1) (by omega)
+    by_cases hmod : xs i % 4 = 1
+    · have ha : 2 ≤ exps i := by
+        by_contra hlt
+        have hsmall : exps i = 0 ∨ exps i = 1 := by omega
+        rcases hsmall with ha0 | ha1
+        · have heq := hstep i hi
+          rw [ha0, pow_zero, one_mul] at heq
+          omega
+        · have heq := hstep i hi
+          rw [ha1, pow_one] at heq
+          omega
+      simp [hmod]
+      omega
+    · have ha : 1 ≤ exps i := by
+        by_contra hlt
+        have ha0 : exps i = 0 := by omega
+        have heq := hstep i hi
+        rw [ha0, pow_zero, one_mul] at heq
+        omega
+      simp [hmod]
+      omega
+  calc
+    r + (∑ i ∈ Finset.range r,
+      (if xs i % 4 = 1 then 1 else 0))
+        = ∑ i ∈ Finset.range r,
+          (1 + (if xs i % 4 = 1 then 1 else 0)) := by
+            simp [Finset.sum_add_distrib]
+    _ ≤ ∑ i ∈ Finset.range r, exps i := by
+      apply Finset.sum_le_sum
+      intro i hi
+      exact hlocal i (Finset.mem_range.mp hi)
+
 end CollatzLean
