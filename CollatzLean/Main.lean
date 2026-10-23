@@ -570,4 +570,32 @@ theorem acceleratedPath_coarse_bound_implies_descent
   have hstrict := Nat.mul_lt_mul_of_pos_right hthreshold hn
   omega
 
+
+/--
+Every exponent in an odd-to-odd accelerated path is positive, hence the
+accumulated exponent is at least the path length. This elementary bound is
+not strong enough by itself to force the coarse threshold 10^r < 3^r * 2^A.
+-/
+theorem acceleratedPath_exponent_sum_ge_length
+    (xs exps : Nat → Nat) (r : Nat)
+    (hodd : ∀ i, i ≤ r → xs i % 2 = 1)
+    (hstep : ∀ i, i < r →
+      2 ^ (exps i) * xs (i + 1) = 3 * xs i + 1) :
+    r ≤ ∑ i ∈ Finset.range r, exps i := by
+  have hexp : ∀ i, i < r → 1 ≤ exps i := by
+    intro i hi
+    by_contra hnot
+    have he : exps i = 0 := by omega
+    have hnext := hstep i hi
+    rw [he, pow_zero, one_mul] at hnext
+    have hodd_i := hodd i (by omega)
+    have hodd_next := hodd (i + 1) (by omega)
+    omega
+  calc
+    r = ∑ i ∈ Finset.range r, 1 := by simp
+    _ ≤ ∑ i ∈ Finset.range r, exps i := by
+      apply Finset.sum_le_sum
+      intro i hi
+      exact hexp i (Finset.mem_range.mp hi)
+
 end CollatzLean
