@@ -109,7 +109,7 @@ example (n : Nat) (xs exps : Nat → Nat) (r : Nat)
             (2 ^ (∑ j ∈ Finset.range i, exps j)) <
       (2 ^ (∑ i ∈ Finset.range r, exps i)) * n) :
     xs r < n :=
-  acceleratedPathIdentity_conditional_descent n xs exps r hstart hstep hn hbound
+  acceleratedPathIdentity_conditional_descent n xs exps r hstart hstep hbound
 
 #check CollatzConjecture
 #check GlobalDescentTarget
