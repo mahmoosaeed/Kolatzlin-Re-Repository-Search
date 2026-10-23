@@ -650,4 +650,44 @@ theorem acceleratedPath_exponent_ge_one_add_mod_four_count
       intro i hi
       exact hlocal i (Finset.mem_range.mp hi)
 
+
+/--
+Residue-count criterion for descent. If the number of preterminal states
+congruent to 1 modulo 4 is large enough to make
+10^r < 3^r * 2^(r + count), then the coarse path bound proves descent.
+This is conditional: no theorem here claims the threshold holds on every path.
+-/
+theorem acceleratedPath_mod_four_count_implies_descent
+    (n : Nat) (xs exps : Nat → Nat) (r : Nat)
+    (hstart : xs 0 = n)
+    (hstep : ∀ i, i < r →
+      2 ^ (exps i) * xs (i + 1) = 3 * xs i + 1)
+    (hodd : ∀ i, i ≤ r → xs i % 2 = 1)
+    (hlarge : ∀ i, i < r → 3 ≤ xs i)
+    (hn : 0 < n)
+    (hthreshold :
+      10 ^ r <
+        (3 ^ r) *
+          (2 ^ (r + (∑ i ∈ Finset.range r,
+            (if xs i % 4 = 1 then 1 else 0))))) :
+    xs r < n := by
+  have hsum := acceleratedPath_exponent_ge_one_add_mod_four_count
+    xs exps r hodd hstep
+  have hpow : 2 ^ (r + (∑ i ∈ Finset.range r,
+      (if xs i % 4 = 1 then 1 else 0))) ≤
+      2 ^ (∑ i ∈ Finset.range r, exps i) :=
+    Nat.pow_le_pow_right (by omega : 1 ≤ 2) hsum
+  have hthreshold' :
+      10 ^ r <
+        (3 ^ r) * (2 ^ (∑ i ∈ Finset.range r, exps i)) := by
+    calc
+      10 ^ r <
+          (3 ^ r) *
+            (2 ^ (r + (∑ i ∈ Finset.range r,
+              (if xs i % 4 = 1 then 1 else 0)))) := hthreshold
+      _ ≤ (3 ^ r) * (2 ^ (∑ i ∈ Finset.range r, exps i)) :=
+        Nat.mul_le_mul_left (3 ^ r) hpow
+  exact acceleratedPath_coarse_bound_implies_descent
+    n xs exps r hstart hstep hlarge hn hthreshold'
+
 end CollatzLean
