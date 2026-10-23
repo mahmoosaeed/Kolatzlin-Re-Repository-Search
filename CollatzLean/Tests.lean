@@ -144,5 +144,17 @@ example (xs exps : Nat → Nat) (r : Nat)
   acceleratedPath_exponent_sum_ge_length xs exps r hodd hstep
 
 
+
+/-- Mod-four residue counts contribute to a sharper exponent lower bound. -/
+example (xs exps : Nat → Nat) (r : Nat)
+    (hodd : ∀ i, i ≤ r → xs i % 2 = 1)
+    (hstep : ∀ i, i < r →
+      2 ^ (exps i) * xs (i + 1) = 3 * xs i + 1) :
+    r + (∑ i ∈ Finset.range r,
+      (if xs i % 4 = 1 then 1 else 0))
+      ≤ ∑ i ∈ Finset.range r, exps i :=
+  acceleratedPath_exponent_ge_one_add_mod_four_count xs exps r hodd hstep
+
+
 #check CollatzConjecture
 #check GlobalDescentTarget
