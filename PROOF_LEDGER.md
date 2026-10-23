@@ -51,6 +51,10 @@ Status policy: “kernel-checked” means the declaration was compiled in the st
 | T-008 | Accumulated exponent lower-bound regression contracts | Type-checks both the length bound and the mod-four-count bound | Passed; CI run 73 |
 | P-032 | Axiom audit for mod-four exponent bound | Dependencies: propext, Classical.choice, Quot.sound; no sorryAx or user-declared custom axiom reported | Passed; CI run 73 |
 
+| P-033 | acceleratedPath_mod_four_count_implies_descent | If the mod-four residue count satisfies the explicit threshold, the coarse path bound proves terminal descent | Kernel-checked conditional theorem; CI run 77 |
+| T-009 | Mod-four residue-count descent contract | Regression test for the residue-count threshold theorem | Passed; CI run 77 |
+| P-034 | Axiom audit for mod-four residue-count descent | Dependencies: propext, Classical.choice, Quot.sound; no sorryAx or user-declared custom axiom reported | Passed; CI run 77 |
+
 ## Exact CI record
 - Verified source commit (the exact tree used by the successful run): `e502e8653204e5024e3fdfc44b2d161463a3e7ae`
 - Successful CI run 55: https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/40007690102
@@ -72,3 +76,9 @@ The Collatz conjecture is **NOT PROVED**. The exact path identity is now formali
 - Verification artifact: [lean-verification-logs](https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/40014458427/artifacts/12527373031)
 - Artifact SHA-256: 34290b8c5bfdbe2ab1805fd124ae5b1ba202ca015e1c7ec0bdd7afc7625a610e.
 - Run 73: lake build CollatzLean passed; explicit axiom audit passed; regression tests passed. The mod-four exponent-count theorem depends on propext, Classical.choice, and Quot.sound; no sorryAx appeared in the audit log.
+
+- Latest verified source revision (exact tree used by successful run 77): 8877eba7722b8b87d8977096ee4fefde6103277f.
+- Successful CI run 77: https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/40014832239
+- Verification artifact: [lean-verification-logs](https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/40014832239/artifacts/12527304079)
+- Artifact SHA-256: 4473f56aa81f5f6de0037461064ada85903f647921bde2e7c96217c87e463cb1.
+- Run 77 checks: lake build CollatzLean passed; explicit axiom audit passed; regression tests passed. The mod-four residue-count descent theorem depends on propext, Classical.choice, and Quot.sound; no sorryAx appeared in the audit log.
