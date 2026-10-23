@@ -101,7 +101,6 @@ example (n : Nat) (xs exps : Nat → Nat) (r : Nat)
     (hstart : xs 0 = n)
     (hstep : ∀ i, i < r →
       2 ^ (exps i) * xs (i + 1) = 3 * xs i + 1)
-    (hn : 0 < n)
     (hbound :
       (3 ^ r) * n +
         ∑ i ∈ Finset.range r,
