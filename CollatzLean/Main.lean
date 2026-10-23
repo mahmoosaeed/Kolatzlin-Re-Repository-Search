@@ -420,7 +420,7 @@ theorem acceleratedPathIdentity
             (3 ^ (r - r)) *
               (2 ^ (∑ j ∈ Finset.range r, exps j))) := by
         rw [Finset.sum_range_succ]
-      simp only [Finset.sum_range_succ] at ih' ⊢
+      simp only [Finset.sum_range_succ] at ih'
       dsimp [E, S] at ih' ⊢
       rw [Nat.pow_add]
       calc
