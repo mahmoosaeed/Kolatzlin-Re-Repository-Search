@@ -46,6 +46,11 @@ Status policy: “kernel-checked” means the declaration was compiled in the st
 | P-029 | Axiom audit for coarse exponent results | Theorems depend on `propext`, `Classical.choice`, `Quot.sound`; no `sorryAx` or user-declared custom axiom reported | Passed; CI run 65 |
 | O-004 | Universal accumulated-exponent growth or alternative Lyapunov function | Prove that every path avoiding earlier descent eventually satisfies the quantitative threshold, or construct a different well-founded decreasing potential. Current coarse bound is conditional and does not prove that threshold occurs universally. | Open |
 
+| P-030 | acceleratedPath_exponent_sum_ge_length | For an odd-to-odd accelerated path, every local exponent is at least 1, so the accumulated exponent is at least the number of steps | Kernel-checked; CI run 70 |
+| P-031 | acceleratedPath_exponent_ge_one_add_mod_four_count | Sharper bound: accumulated exponent is at least path length plus the number of preterminal states congruent to 1 modulo 4 | Kernel-checked; CI run 73 |
+| T-008 | Accumulated exponent lower-bound regression contracts | Type-checks both the length bound and the mod-four-count bound | Passed; CI run 73 |
+| P-032 | Axiom audit for mod-four exponent bound | Dependencies: propext, Classical.choice, Quot.sound; no sorryAx or user-declared custom axiom reported | Passed; CI run 73 |
+
 ## Exact CI record
 - Verified source commit (the exact tree used by the successful run): `e502e8653204e5024e3fdfc44b2d161463a3e7ae`
 - Successful CI run 55: https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/40007690102
@@ -61,3 +66,9 @@ Status policy: “kernel-checked” means the declaration was compiled in the st
 - The Collatz conjecture remains **NOT PROVED**. The path identity is proved, but the inequality needed for universal descent is not.
 
 The Collatz conjecture is **NOT PROVED**. The exact path identity is now formalized; proving a universal descent guarantee remains the central open obligation.
+
+- Latest verified source revision (exact tree used by successful run 73): 24a1d8f8079b0794199e5ca60fb3fb4c6e33fbaf.
+- Successful CI run 73: https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/40014458427
+- Verification artifact: [lean-verification-logs](https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/40014458427/artifacts/12527373031)
+- Artifact SHA-256: 34290b8c5bfdbe2ab1805fd124ae5b1ba202ca015e1c7ec0bdd7afc7625a610e.
+- Run 73: lake build CollatzLean passed; explicit axiom audit passed; regression tests passed. The mod-four exponent-count theorem depends on propext, Classical.choice, and Quot.sound; no sorryAx appeared in the audit log.
