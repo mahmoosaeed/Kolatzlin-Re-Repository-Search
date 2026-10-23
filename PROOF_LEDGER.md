@@ -41,11 +41,22 @@ Status policy: “kernel-checked” means the declaration was compiled in the st
 | O-002 | GlobalDescentTarget | Prove strict descent for every odd input greater than 1 | Open target |
 | O-003 | Uniform/finite-step descent from residue constraints and path identity | Need a universal quantitative bound on accumulated exponents or a different decreasing invariant | Open; current results do not establish universal finite-step descent |
 
+| P-027 | acceleratedPath_coarse_exponent_bound | If every preterminal path state is at least 3, then (3^r 2^{A_r} x_r \le 10^r n), where (A_r=\sum_{i<r}a_i) | Kernel-checked; CI run 65 |
+| P-028 | acceleratedPath_coarse_bound_implies_descent | Under the same path-state condition, (10^r < 3^r 2^{A_r}) implies (x_r<n), assuming (n>0) | Kernel-checked conditional theorem; CI run 65 |
+| T-007 | Coarse exponent threshold interface | Regression test for the conditional descent theorem | Passed; CI run 65 |
+| P-029 | Axiom audit for coarse exponent results | Theorems depend on `propext`, `Classical.choice`, `Quot.sound`; no `sorryAx` or user-declared custom axiom reported | Passed; CI run 65 |
+| O-004 | Universal accumulated-exponent growth or alternative Lyapunov function | Prove that every path avoiding earlier descent eventually satisfies the quantitative threshold, or construct a different well-founded decreasing potential. Current coarse bound is conditional and does not prove that threshold occurs universally. | Open |
+
 ## Exact CI record
 - Verified source commit (the exact tree used by the successful run): `e502e8653204e5024e3fdfc44b2d161463a3e7ae`
 - Successful CI run 55: https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/40007690102
 - Verification artifact: [lean-verification-logs](https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/40007690102/artifacts/12524214136)
 - Artifact digest: `sha256:0dc54ad3d2f6870f98973bc416564db2d2a8f7673845f425143ea653ed890ca3`
+- Latest expanded verification source commit: `f645dc1da241f1b9502e686e202672373fa6dff2` (the exact source revision verified by CI run 65).
+- Successful CI run 65: https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/40010019433
+- Verification artifact: [lean-verification-logs](https://github.com/mahmoosaeed/Kolatzlin-Re-Repository-Search/actions/runs/40010019433/artifacts/12526430669)
+- Artifact digest: `sha256:3752692d447bb0c848ec3baecff9a0c13f5de7c4cd4bf8abba565157454b9bc0`
+- Run 65 checks: `lake build CollatzLean` **PASSED**; explicit axiom report **PASSED**; regression tests **PASSED**. The four accelerated-path and coarse-bound declarations listed above appear in the audit output with dependencies `[propext, Classical.choice, Quot.sound]`; the audit log contains no `sorryAx`.
 - Checks: `lake build CollatzLean` **PASSED**; explicit axiom audit **PASSED**; regression tests **PASSED**.
 - Lean: 4.19.0; Mathlib revision: `c44e0c8ee63ca166450922a373c7409c5d26b00b`.
 - The Collatz conjecture remains **NOT PROVED**. The path identity is proved, but the inequality needed for universal descent is not.
