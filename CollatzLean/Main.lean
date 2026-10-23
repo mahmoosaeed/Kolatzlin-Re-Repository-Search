@@ -531,9 +531,11 @@ theorem acceleratedPath_coarse_exponent_bound
       rw [hsum, Nat.pow_succ, Nat.pow_succ]
       calc
         (3 ^ r * 3) *
-            (2 ^ (∑ i ∈ Finset.range r, exps i) *
-              2 ^ exps r) * xs (r + 1)
-            = (3 ^ r * 2 ^ (∑ i ∈ Finset.range r, exps i)) *
+            (2 ^ ((∑ i ∈ Finset.range r, exps i) + exps r)) * xs (r + 1)
+            = (3 ^ r * 3) *
+                (2 ^ (∑ i ∈ Finset.range r, exps i) * 2 ^ exps r) *
+                xs (r + 1) := by rw [Nat.pow_add]
+        _ = (3 ^ r * 2 ^ (∑ i ∈ Finset.range r, exps i)) *
                 (3 * (2 ^ exps r * xs (r + 1))) := by ring
         _ ≤ (3 ^ r * 2 ^ (∑ i ∈ Finset.range r, exps i)) *
               (10 * xs r) := Nat.mul_le_mul_left _ hlocal
