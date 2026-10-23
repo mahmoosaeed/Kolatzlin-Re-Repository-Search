@@ -40,9 +40,8 @@ Status policy: “kernel-checked” means the declaration was compiled in the st
 | P-026 | Axiom audit for acceleratedPathIdentity and acceleratedPathIdentity_conditional_descent | Dependencies are `propext`, `Classical.choice`, `Quot.sound`; no `sorryAx` or user-declared custom axiom reported | Passed; CI run 55 |
 | O-002 | GlobalDescentTarget | Prove strict descent for every odd input greater than 1 | Open target |
 | O-003 | Uniform/finite-step descent from residue constraints and path identity | Need a universal quantitative bound on accumulated exponents or a different decreasing invariant | Open; current results do not establish universal finite-step descent |
-
-| P-027 | acceleratedPath_coarse_exponent_bound | If every preterminal path state is at least 3, then (3^r 2^{A_r} x_r \le 10^r n), where (A_r=\sum_{i<r}a_i) | Kernel-checked; CI run 65 |
-| P-028 | acceleratedPath_coarse_bound_implies_descent | Under the same path-state condition, (10^r < 3^r 2^{A_r}) implies (x_r<n), assuming (n>0) | Kernel-checked conditional theorem; CI run 65 |
+| P-027 | acceleratedPath_coarse_exponent_bound | If every preterminal path state is at least 3, then `3^r * 2^{A_r} * x_r ≤ 10^r * n`, where `A_r = Σ_{i<r} a_i` | Kernel-checked; CI run 65 |
+| P-028 | acceleratedPath_coarse_bound_implies_descent | Under the same path-state condition, `10^r < 3^r * 2^{A_r}` implies `x_r < n`, assuming `n > 0` | Kernel-checked conditional theorem; CI run 65 |
 | T-007 | Coarse exponent threshold interface | Regression test for the conditional descent theorem | Passed; CI run 65 |
 | P-029 | Axiom audit for coarse exponent results | Theorems depend on `propext`, `Classical.choice`, `Quot.sound`; no `sorryAx` or user-declared custom axiom reported | Passed; CI run 65 |
 | O-004 | Universal accumulated-exponent growth or alternative Lyapunov function | Prove that every path avoiding earlier descent eventually satisfies the quantitative threshold, or construct a different well-founded decreasing potential. Current coarse bound is conditional and does not prove that threshold occurs universally. | Open |
