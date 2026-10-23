@@ -495,4 +495,51 @@ theorem acceleratedPathIdentity_conditional_descent
   rw [hid] at hmul
   omega
 
+
+/--
+A coarse quantitative exponent bound for paths that stay at values at least 3.
+If every preterminal state is at least 3, then
+  3^r * 2^(A_r) * x_r <= 10^r * n.
+Consequently, the strict inequality 10^r < 3^r * 2^(A_r)
+forces terminal descent. This is only a sufficient criterion; it does not
+assert that the exponent bound always occurs.
+-/
+theorem acceleratedPath_coarse_exponent_bound
+    (n : Nat) (xs exps : Nat → Nat) (r : Nat)
+    (hstart : xs 0 = n)
+    (hstep : ∀ i, i < r →
+      2 ^ (exps i) * xs (i + 1) = 3 * xs i + 1)
+    (hlarge : ∀ i, i < r → 3 ≤ xs i) :
+    (3 ^ r) * (2 ^ (∑ i ∈ Finset.range r, exps i)) * xs r
+      ≤ (10 ^ r) * n := by
+  induction r with
+  | zero =>
+      simp [hstart]
+  | succ r ih =>
+      have hr := hstep r (by omega)
+      have hxr := hlarge r (by omega)
+      have ih' := ih (fun i hi => hstep i (by omega))
+        (fun i hi => hlarge i (by omega))
+      have hlocal :
+          3 * (2 ^ exps r * xs (r + 1)) ≤ 10 * xs r := by
+        rw [hr]
+        nlinarith
+      have hsum :
+          (∑ i ∈ Finset.range (r + 1), exps i) =
+            (∑ i ∈ Finset.range r, exps i) + exps r := by
+        rw [Finset.sum_range_succ]
+      rw [hsum, Nat.pow_succ, Nat.pow_succ]
+      calc
+        (3 ^ r * 3) *
+            (2 ^ (∑ i ∈ Finset.range r, exps i) *
+              2 ^ exps r) * xs (r + 1)
+            = (3 ^ r * 2 ^ (∑ i ∈ Finset.range r, exps i)) *
+                (3 * (2 ^ exps r * xs (r + 1))) := by ring
+        _ ≤ (3 ^ r * 2 ^ (∑ i ∈ Finset.range r, exps i)) *
+              (10 * xs r) := Nat.mul_le_mul_left _ hlocal
+        _ = 10 * ((3 ^ r) *
+              (2 ^ (∑ i ∈ Finset.range r, exps i)) * xs r) := by ring
+        _ ≤ 10 * ((10 ^ r) * n) := Nat.mul_le_mul_left 10 ih'
+        _ = (10 ^ r * 10) * n := by ring
+
 end CollatzLean
