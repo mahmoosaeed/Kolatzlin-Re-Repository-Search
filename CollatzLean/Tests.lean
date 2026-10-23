@@ -156,5 +156,24 @@ example (xs exps : Nat → Nat) (r : Nat)
   acceleratedPath_exponent_ge_one_add_mod_four_count xs exps r hodd hstep
 
 
+
+/-- A sufficient mod-four residue-count threshold yields descent. -/
+example (n : Nat) (xs exps : Nat → Nat) (r : Nat)
+    (hstart : xs 0 = n)
+    (hstep : ∀ i, i < r →
+      2 ^ (exps i) * xs (i + 1) = 3 * xs i + 1)
+    (hodd : ∀ i, i ≤ r → xs i % 2 = 1)
+    (hlarge : ∀ i, i < r → 3 ≤ xs i)
+    (hn : 0 < n)
+    (hthreshold :
+      10 ^ r <
+        (3 ^ r) *
+          (2 ^ (r + (∑ i ∈ Finset.range r,
+            (if xs i % 4 = 1 then 1 else 0))))) :
+    xs r < n :=
+  acceleratedPath_mod_four_count_implies_descent
+    n xs exps r hstart hstep hodd hlarge hn hthreshold
+
+
 #check CollatzConjecture
 #check GlobalDescentTarget
