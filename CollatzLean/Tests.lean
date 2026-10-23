@@ -110,5 +110,16 @@ example (n : Nat) (xs exps : Nat → Nat) (r : Nat)
     xs r < n :=
   acceleratedPathIdentity_conditional_descent n xs exps r hstart hstep hbound
 
+
+/-- Coarse accumulated-exponent bound for paths whose preterminal values stay >= 3. -/
+example (n : Nat) (xs exps : Nat → Nat) (r : Nat)
+    (hstart : xs 0 = n)
+    (hstep : ∀ i, i < r →
+      2 ^ (exps i) * xs (i + 1) = 3 * xs i + 1)
+    (hlarge : ∀ i, i < r → 3 ≤ xs i) :
+    (3 ^ r) * (2 ^ (∑ i ∈ Finset.range r, exps i)) * xs r
+      ≤ (10 ^ r) * n :=
+  acceleratedPath_coarse_exponent_bound n xs exps r hstart hstep hlarge
+
 #check CollatzConjecture
 #check GlobalDescentTarget
